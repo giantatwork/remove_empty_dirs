@@ -29,7 +29,7 @@ def main():
     start_dir = Path(start_dir).expanduser()
 
     if not Path.exists(start_dir):
-        print(f"Path '{start_dir} does not exist")
+        print(f"Path '{start_dir}' does not exist")
         return 1
 
     empty_dirs = get_empty(start_dir)
@@ -38,14 +38,14 @@ def main():
         print("Could not find any empty directories")
         return 0
 
-    print_paths(empty_dirs)
+    print_directories(empty_dirs)
     if args.dry_run:
         return 0
 
     if args.no_interaction:
         return remove_directories(empty_dirs)
 
-    confirm = input("Delete empty directories? (y/n)\n")
+    confirm = input("Delete empty directories? (y/N)\n")
     if confirm.lower() != "y":
         print("Skipped")
         return 0
@@ -53,8 +53,8 @@ def main():
     return remove_directories(empty_dirs)
 
 
-def print_paths(paths: list[Path]):
-    print("\nEmpty directories:\n")
+def print_directories(paths: list[Path]):
+    print("Empty directories:\n")
     for path in paths:
         print(f"- {path}")
     print()
@@ -101,6 +101,8 @@ def get_empty(start_dir: Path) -> list[Path] | None:
     result = None
 
     directory_paths = get_directory_paths(start_dir)
+    if not directory_paths:
+        return None
     excluded_paths = get_excluded_paths(start_dir)
 
     for dir_path in directory_paths:

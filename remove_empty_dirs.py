@@ -7,15 +7,17 @@ from pathlib import Path
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Empty directory deletion tool")
+    parser = argparse.ArgumentParser(
+        description="Find and remove empty directories except hidden directories."
+    )
     parser.add_argument("start_dir", help="Starting directory")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Just show empty directories"
+        "--dry-run", action="store_true", help="Show empty directories and quit."
     )
     parser.add_argument(
         "--no-interaction",
         action="store_true",
-        help="Skip confirmations and delete all empty directories immediately",
+        help="Skip confirmation and delete all empty directories immediately.",
     )
 
     args = parser.parse_args()

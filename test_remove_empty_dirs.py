@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from folderfix import get_empty
+from remove_empty_dirs import get_empty
 
 
 def test_get_empty():
@@ -19,6 +19,3 @@ def test_get_empty():
         start_dir / "a/b/r/s",
         start_dir / "a/b/r",
     ]
-
-
-# test_get_empty()

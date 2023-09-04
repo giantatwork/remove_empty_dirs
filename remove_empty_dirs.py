@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
@@ -75,7 +74,7 @@ def remove_directories(paths: list[Path]) -> bool:
 
 def get_directory_paths(start_dir: Path) -> list[str]:
     return [
-        f"{path}{os.sep}"
+        path
         for path in start_dir.glob("*/**")
         if path.is_dir() and not any(part.startswith(".") for part in path.parts)
     ]
@@ -90,20 +89,18 @@ def contains_file(dir: Path) -> bool:
 
 def get_empty(start_dir: Path) -> list[Path] | None:
     empty_list = []
-    result = None
 
     directory_paths = get_directory_paths(start_dir)
     if not directory_paths:
         return None
 
     for dir_path in directory_paths:
-        if not contains_file(Path(dir_path)):
+        if not contains_file(dir_path):
             empty_list.append(dir_path)
 
-        empty_list.sort(key=len, reverse=True)
-        result = [Path(x) for x in empty_list]
+    empty_list.sort(key=lambda x: len(str(x)), reverse=True)
 
-    return result
+    return empty_list
 
 
 if __name__ == "__main__":

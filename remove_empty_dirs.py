@@ -74,9 +74,6 @@ def remove_directories(paths: list[Path]) -> bool:
 
 
 def get_directory_paths(start_dir: Path) -> list[str]:
-    """
-    Only look for directories that do not start with a '.'
-    """
     return [
         f"{path}{os.sep}"
         for path in start_dir.glob("*/**")
@@ -84,16 +81,11 @@ def get_directory_paths(start_dir: Path) -> list[str]:
     ]
 
 
-def get_excluded_paths(start_dir: Path) -> list[str]:
-    """
-    Exclude all directories containing files and directories starting with a '.'
-    """
-    return [
-        str(path)
-        for path in start_dir.glob("**/*")
-        if path.is_file()
-        or (path.is_dir() and any([part.startswith(".") for part in path.parts]))
-    ]
+def contains_file(dir: Path) -> bool:
+    for path in dir.glob("**/*"):
+        if path.is_file() or any([part.startswith(".") for part in path.parts]):
+            return True
+    return False
 
 
 def get_empty(start_dir: Path) -> list[Path] | None:
@@ -103,15 +95,9 @@ def get_empty(start_dir: Path) -> list[Path] | None:
     directory_paths = get_directory_paths(start_dir)
     if not directory_paths:
         return None
-    excluded_paths = get_excluded_paths(start_dir)
 
     for dir_path in directory_paths:
-        exclude = False
-        for path in excluded_paths:
-            if dir_path in path:
-                exclude = True
-                continue
-        if not exclude:
+        if not contains_file(Path(dir_path)):
             empty_list.append(dir_path)
 
         empty_list.sort(key=len, reverse=True)
